@@ -1,6 +1,6 @@
 
 //Listar todos
-GET http://localhost:3000/api/produtos
+GET http://localhost:8080/api/produtos
 ###
 // Listar por id
 GET http://localhost:3000/api/produtos/3

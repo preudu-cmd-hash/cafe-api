@@ -17,6 +17,17 @@ export interface IPedido {
 
 export type INovoItemPedido = Pick<IItemPedido, "produto_id" | "quantidade">;
 
+export interface IPedidoRow {
+  pedido_id: number
+  data_criacao: Date
+  status: string
+  item_id: number | null
+  produto_id: number | null
+  quantidade: number | null
+  produto_nome: string | null
+  produto_preco: number | null
+}
+
 export const PedidoModel = {
   async criar(itens: INovoItemPedido[]): Promise<{ id: number }> {
     const client = await pool.connect();
@@ -57,5 +68,45 @@ export const PedidoModel = {
     } finally {
       client.release();
     }
+  },
+
+  async listarTodos(): Promise<IPedido[]> {
+    const query = 
+    `
+      select p.id as pedido_id, p.data_criacao, p.status, ip.id as item_id, ip.produto_id, ip.quantidade, pr.nome as produto_nome, pr.preco as produto_preco
+      from pedidos p
+      left join itens_pedido ip on p.id = ip.pedido_id
+      left join produtos pr on ip.produto_id = pr.id
+      order by p.data_criacao desc
+    `;
+
+    const { rows } = await pool.query<IPedidoRow>(query)
+    const listaPedidos: IPedido[] = []
+
+    for (const row of rows) {
+      let pedidoExistente = listaPedidos.find(p => p.id === row.pedido_id)
+      
+      if (!pedidoExistente) {
+        pedidoExistente = {
+          id: row.pedido_id,
+          data_criacao: row.data_criacao,
+          status: row.status,
+          itens: []
+        }
+        listaPedidos.push(pedidoExistente)
+      }
+
+      if (row.item_id) {
+        pedidoExistente.itens.push({
+          id: row.item_id,
+          produto_id: row.produto_id!,
+          pedido_id: row.pedido_id!,
+          quantidade: row.quantidade!,
+          preco_un: row.produto_preco!
+        })
+      }
+    }
+
+    return listaPedidos
   },
 };

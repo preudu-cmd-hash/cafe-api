@@ -1,10 +1,10 @@
-POST http://localhost:3000/api/pedidos
+POST http://localhost:8080/api/pedidos
 Content-Type: application/json
 
 {
     "itens": [
         {
-            "produto_id": 1,
+            "produto_id": 2,
             "quantidade": 2
         },
         {
@@ -12,7 +12,7 @@ Content-Type: application/json
             "quantidade": 1
         },
         {
-            "produto_id": 3,
+            "produto_id": 4,
             "quantidade": 4
         }
     ]
