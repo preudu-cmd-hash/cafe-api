@@ -1,0 +1,27 @@
+
+//Listar todos
+GET http://localhost:3000/api/produtos
+###
+// Listar por id
+GET http://localhost:3000/api/produtos/3
+###
+//Cadastrar
+POST http://localhost:3000/api/produtos
+Content-Type: application/json
+
+{
+    "nome": "Café cuado 2",
+    "preco": 2.50,
+    "estoque": 20
+}
+###
+// Atualizar
+PATCH  http://localhost:3000/api/produtos/4
+Content-Type: application/json
+
+{
+    "nome": "Café Cuado editado"
+}
+###
+// Deletar
+DELETE http://localhost:3000/api/produtos/4
