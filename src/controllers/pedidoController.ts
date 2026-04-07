@@ -72,3 +72,25 @@ export const patchStatus = async (req: Request, res: Response) => {
       .json({ error: "Ocorreu um erro inesperado ao atualizar o status." });
   }
 };
+
+export const putPedido = async (req: Request, res: Response) => {
+  const id: number = Number(req.params.id);
+  const itens: INovoItemPedido[] = req.body.itens;
+
+  if (!itens || !Array.isArray(itens)) {
+    res.status(400).json({ message: "Formato de itens iválido" });
+  }
+
+  try {
+    await PedidoModel.atualizar(id, itens);
+    res.status(200).json({ message: "Pedido atualizado com sucesso" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res
+      .status(500)
+      .json({ message: "Houve um erro inesperado ao atualizar o item" });
+  }
+};

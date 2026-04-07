@@ -154,7 +154,7 @@ export const PedidoModel = {
         );
       }
 
-      await client.query("delete itens_pedido where pedido_id = $1", [id]);
+      await client.query("delete from itens_pedido where pedido_id = $1", [id]);
 
       for (const item of novosItens) {
         const { rows: produto } = await client.query(
