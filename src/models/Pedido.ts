@@ -196,4 +196,36 @@ export const PedidoModel = {
     const result = await pool.query(query, [novoStatus, id]);
     return (result.rowCount ?? 0) > 0;
   },
+
+  async getFaturamentoTotal() {
+    const query =
+      "select sum(itp.quantidade * itp.preco_un) as faturamento_total from pedidos p join itens_pedido itp on p.id = itp.pedido_id where p.status = 'finalizado'";
+    const result = await pool.query(query);
+
+    return {
+      faturamento_total: Number(result.rows[0].faturamento_total),
+    };
+  },
+
+  async cancelaPedido(id: number) {
+    const client = await pool.connect();
+
+    try {
+      await client.query("BEGIN");
+
+      await client.query(
+        "update produtos set estoque = estoque + $1 where id = $2",
+        []
+      );
+
+      const cancela = "cacelado";
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
+  },
 };

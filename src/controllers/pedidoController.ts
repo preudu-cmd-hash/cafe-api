@@ -94,3 +94,12 @@ export const putPedido = async (req: Request, res: Response) => {
       .json({ message: "Houve um erro inesperado ao atualizar o item" });
   }
 };
+
+export const getFaturamento = async (req: Request, res: Response) => {
+  try {
+    const faturamento = await PedidoModel.getFaturamentoTotal();
+    return res.status(200).json(faturamento);
+  } catch {
+    res.status(500).json({ error: "erro ao buscar o faturamento" });
+  }
+};

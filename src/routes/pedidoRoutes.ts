@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   deletePedido,
+  getFaturamento,
   getPedidos,
   patchStatus,
   postPedido,
@@ -10,6 +11,7 @@ import {
 const router = Router();
 
 router.get("/", getPedidos);
+router.get("/relatorio", getFaturamento);
 router.post("/", postPedido);
 router.delete("/:id", deletePedido);
 router.patch("/:id", patchStatus);
