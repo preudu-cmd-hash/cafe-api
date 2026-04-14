@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  cancelarPedido,
   deletePedido,
   getFaturamento,
   getPedidos,
@@ -15,6 +16,7 @@ router.get("/relatorio", getFaturamento);
 router.post("/", postPedido);
 router.delete("/:id", deletePedido);
 router.patch("/:id", patchStatus);
+router.patch("/:id/cancelar", cancelarPedido);
 router.put("/:id", putPedido);
 
 export const pedidoRoutes = router;

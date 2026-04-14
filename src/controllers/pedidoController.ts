@@ -103,3 +103,36 @@ export const getFaturamento = async (req: Request, res: Response) => {
     res.status(500).json({ error: "erro ao buscar o faturamento" });
   }
 };
+
+export const cancelarPedido = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        mensagem: "ID inválido",
+      });
+    }
+
+    await PedidoModel.cancelaPedido(id);
+
+    return res.status(200).json({
+      mensagem: "Pedido cancelado com sucesso",
+    });
+  } catch (error) {
+    const mensagem =
+      error instanceof Error ? error.message : "Erro interno do servidor";
+
+    if (mensagem === "Apenas pedidos pendentes podem ser cancelados") {
+      return res.status(400).json({ mensagem });
+    }
+
+    if (mensagem === "Pedido não encontrado") {
+      return res.status(404).json({ mensagem });
+    }
+
+    return res.status(500).json({
+      mensagem: "Erro ao cancelar pedido",
+    });
+  }
+};
